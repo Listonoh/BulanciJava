@@ -6,7 +6,10 @@ import javax.swing.ImageIcon;
 
 public class Exodus extends Sprite {
     int timer = 0;
+    long lastShot = 0;
     int dx,dy;
+    private int lastSpotedPlayer;
+
     public Exodus(int x, int y) {
 
         initExodus(x, y);
@@ -41,11 +44,41 @@ public class Exodus extends Sprite {
         }
     }
 
-    public boolean tryShot(Player player) {
+    public boolean tryShot(Player player, long time) {
+        if (time - lastShot > Commons.SHOTSPEED){
+            lastShot = time;
+            setLooking(lastSpotedPlayer);
+            return true;
+        }
         return false;
     }
 
-    public boolean inLine(Player player) {
+    public boolean inLine(Sprite target) {
+        var mx = getX();
+        var my = getY();
+        var tx = target.getX();
+        var ty = target.getY();
+
+        //up
+        if(ty < my && tx <= mx + width && mx + width <= tx + target.width){
+            lastSpotedPlayer = 0;
+            return true;
+        }
+        //left
+        if (tx < mx && ty <= my && my <= ty + target.height){
+            lastSpotedPlayer = 1;
+            return true;
+        }
+        //down
+        if(ty > my && tx <= mx && mx <= tx + target.width){
+            lastSpotedPlayer = 2;
+            return true;
+        }
+        //right
+        if (tx > mx && ty <= my + height && my + height <= ty + target.height){
+            lastSpotedPlayer = 3;
+            return true;
+        }
         return false;
     }
 }

@@ -30,6 +30,7 @@ public class Board extends JPanel {
     private String message = "Game Over";
 
     private Timer timer;
+    private long time = 0;
 
 
     public Board() {
@@ -47,7 +48,6 @@ public class Board extends JPanel {
 
         timer = new Timer(Commons.DELAY, new GameCycle());
         timer.start();
-
         gameInit();
     }
 
@@ -210,12 +210,13 @@ public class Board extends JPanel {
             int y = exodus.getY();
 
             if(exodus.inLine(player)){
-                if (!exodus.tryShot(player)){
+                if (!exodus.tryShot(player, time)){
                     exodus.act();
                 }
                 else{
-                    var p = Commons.lookingArr[exodus.looking];
-                    var bul = new Shot(x,y,p.x,p.y);
+                    var p = exodus.getLookingP();
+                    var shp = exodus.getShootingPoint();
+                    shots.add(new Shot(shp.x, shp.y, p.x, p.y));
                 }
             }
             else {
@@ -225,7 +226,7 @@ public class Board extends JPanel {
     }
 
     private void doGameCycle() {
-
+        time += 1;
         update();
         repaint();
     }
@@ -260,8 +261,9 @@ public class Board extends JPanel {
             if (key == KeyEvent.VK_SPACE) {
 
                 if (inGame) {
-                    Point p = Commons.lookingArr[player.looking];
-                    shots.add(new Shot(x, y, p.x, p.y));
+                    Point p = player.getLookingP();
+                    Point shp = player.getShootingPoint();
+                    shots.add(new Shot(shp.x, shp.y, p.x, p.y));
 
                 }
             }

@@ -22,14 +22,18 @@ public class Player extends Sprite {
 
         setY(Commons.PLAYER_Y);
         dx = 1;
+        dy = 1;
     }
 
     public void act() {
         var rx = getX();
-        var dds = (dx * Commons.DELAY * Commons.SPEED);
-        var ix = (int) (rx + dds);
-        setX(ix);
-        setY((int) (getY() + (dy * Commons.DELAY * Commons.SPEED)));
+        var ry = getY();
+        var l = Math.sqrt(dx*dx + dy*dy);
+        if (l == 0) l = 1;
+        var ddx = dx * Commons.DELAY * Commons.SPEED / l;
+        var ddy = dy * Commons.DELAY * Commons.SPEED / l;
+        setX((int) (rx + ddx));
+        setY((int) (ry + ddy));
     }
 
     public void keyPressed(KeyEvent e) {

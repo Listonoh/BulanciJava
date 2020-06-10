@@ -3,7 +3,7 @@ package cz.mff.sprite;
 import cz.mff.Commons;
 
 import javax.swing.*;
-import java.awt.Image;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Sprite {
@@ -19,7 +19,7 @@ public class Sprite {
 
     int dx;
     int dy;
-    public int looking = 0; //[0:up, 1: left, 2: down, 3: right]
+    int looking = 0; //[0:up, 1: left, 2: down, 3: right]
 
     public Sprite() {
 
@@ -94,6 +94,23 @@ public class Sprite {
     public int getX() {
 
         return x;
+    }
+
+    public Point getShootingPoint(){
+        var p = new Point(Commons.shootingFrom[looking]);
+        p.x *= width;
+        p.y *= (int) (height/2);
+        p.x += x;
+        p.y += y;
+        return p;
+    }
+
+    public void setLooking(int i){
+        looking = i;
+    }
+
+    public Point getLookingP(){
+        return Commons.lookingArr[looking];
     }
 
     public void setDying(boolean dying) {

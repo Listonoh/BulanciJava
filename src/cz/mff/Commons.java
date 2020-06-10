@@ -15,8 +15,6 @@ public interface Commons {
     int GO_DOWN = 15;
     int CHANCE = 5;
     int DELAY = 16;
-    int PLAYER_WIDTH = 15;
-    int PLAYER_HEIGHT = 10;
     int EXODUS_WIDTH = 15;
     int EXODUS_HEIGHT = 15;
     int NUMBER_OF_KILLS = 15;
@@ -24,5 +22,8 @@ public interface Commons {
     int PLAYER_Y = 50;
     int PLAYER_X = 50;
     Point[] lookingArr = new Point[]{new Point(0,-1), new Point(-1,0), new Point(0,1), new Point(1,0)};
+    Point[] shootingFrom = new Point[]{new Point(1,0), new Point(0,1), new Point(0,1), new Point(1,1)};
     int EXODUS_MOVE = 20;
+    int SHOTSPEED = 15;
+
 }
