@@ -1,37 +1,35 @@
 package cz.mff.sprite;
 
+import cz.mff.Board;
 import cz.mff.Commons;
 
-import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 
 public class Player extends Sprite {
 
+    public int playerNumber;
+    public int fireEvent = KeyEvent.VK_SPACE;
+    public int hp = 100;
 
-    private int facingX;
-    private int facingY;
-
-    public Player() {
+    public Player(int x, int y,int i, Board board) {
+        super(x, y, board);
         initPlayer();
+        playerNumber = i;
     }
 
     private void initPlayer() {
-        loadImage("src/images/Player%d.png");
-
-        setX(Commons.PLAYER_X);
-
-        setY(Commons.PLAYER_Y);
-        dx = 1;
-        dy = 1;
+        loadImages("src/images/Player%d.png");
     }
 
     public void act() {
+//        System.out.println("dx: " + dx + "  dy: " + dy );
         var rx = getX();
         var ry = getY();
         var l = Math.sqrt(dx*dx + dy*dy);
         if (l == 0) l = 1;
         var ddx = dx * Commons.DELAY * Commons.SPEED / l;
         var ddy = dy * Commons.DELAY * Commons.SPEED / l;
+
         setX((int) (rx + ddx));
         setY((int) (ry + ddy));
     }
@@ -51,9 +49,6 @@ public class Player extends Sprite {
         if (key == KeyEvent.VK_DOWN) {
             dy = 1;
         }
-
-        facingX = dx;
-        facingY = dy;
     }
 
     public void keyReleased(KeyEvent e) {
@@ -76,11 +71,11 @@ public class Player extends Sprite {
         }
     }
 
-    public int getDy() {
-        return this.dy;
-    }
-
-    public int getDx() {
-        return this.dx;
+    @Override
+    public boolean collideXY(int x, int y) {
+        if (x + 88 < getX()|| getX() + width + 64 < x || y + 88 < getY() || getY() + height +64 < y){
+            return false;
+        }
+        return true;
     }
 }

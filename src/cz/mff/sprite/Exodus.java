@@ -1,8 +1,7 @@
 package cz.mff.sprite;
 
+import cz.mff.Board;
 import cz.mff.Commons;
-
-import javax.swing.ImageIcon;
 
 public class Exodus extends Sprite {
     int timer = 0;
@@ -10,15 +9,13 @@ public class Exodus extends Sprite {
     int dx,dy;
     private int lastSpotedPlayer;
 
-    public Exodus(int x, int y) {
-
-        initExodus(x, y);
+    public Exodus(int x, int y, Board board) {
+        super(x,y,board);
+        initExodus();
     }
 
-    private void initExodus(int x, int y) {
-        setX(x);
-        setY(y);
-        loadImage("src/images/Exitus%d.png");
+    private void initExodus() {
+        loadImages("src/images/Exitus%d.png");
     }
 
     public void act() {

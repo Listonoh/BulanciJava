@@ -6,11 +6,6 @@ public interface Commons {
 
     int BOARD_WIDTH = 800;
     int BOARD_HEIGHT = 600;
-    int BORDER_RIGHT = 30;
-    int BORDER_LEFT = 5;
-
-    int ALIEN_HEIGHT = 12;
-    int ALIEN_WIDTH = 12;
 
     int GO_DOWN = 15;
     int CHANCE = 5;
@@ -25,5 +20,9 @@ public interface Commons {
     Point[] shootingFrom = new Point[]{new Point(1,0), new Point(0,1), new Point(0,1), new Point(1,1)};
     int EXODUS_MOVE = 20;
     int SHOTSPEED = 15;
+    int SHOTDMG = 49;
 
+    String BlockImage = "src/images/Block.png" ;
+    String Map1 = "src/images/Map1.png";
+    String LifeBar = "src/images/LifeBar.png" ;
 }
