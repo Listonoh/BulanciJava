@@ -7,12 +7,7 @@ public interface Commons {
     int BOARD_WIDTH = 800;
     int BOARD_HEIGHT = 600;
 
-    int GO_DOWN = 15;
-    int CHANCE = 5;
     int DELAY = 16;
-    int EXODUS_WIDTH = 15;
-    int EXODUS_HEIGHT = 15;
-    int NUMBER_OF_KILLS = 15;
     double SPEED = 0.125;
     int PLAYER_Y = 50;
     int PLAYER_X = 50;
@@ -25,4 +20,7 @@ public interface Commons {
     String BlockImage = "src/images/Block.png" ;
     String Map1 = "src/images/Map1.png";
     String LifeBar = "src/images/LifeBar.png" ;
+    int BASE_WIDTH = 32;
+    String Pistol = "src/images/Pistol%d.png";
+    String Shotgun = "src/images/Shotgun%d.png";
 }

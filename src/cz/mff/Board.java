@@ -51,7 +51,9 @@ public class Board extends JPanel {
         gameInit();
     }
 
-
+    /**
+     * Resets all resources and loads new map
+     */
     private void gameInit() {
         players = new ArrayList<>();
         lifeBars = new ArrayList<>();
@@ -59,15 +61,12 @@ public class Board extends JPanel {
         shots = new ArrayList<>();
         blocks = new ArrayList<>();
         initMap1();
-
-
-
     }
 
     private void initMap1() {
         BackImage = new ImageIcon(Commons.Map1).getImage();
 
-        blocks.add(new Block(95,303,this));
+        blocks.add(new Block(95,303, true, this));
         players.add(new Player(Commons.PLAYER_X, Commons.PLAYER_Y, 0, this));
         lifeBars.add(new LifeBar(0, d.height -60,players.get(0), this));
         maxKills = 4;
@@ -75,8 +74,8 @@ public class Board extends JPanel {
         int xi, yi;
         for (int i = 0; i < 4; i++) {
             do {
-                xi = (int) (Math.random() * (Commons.BOARD_WIDTH - Commons.EXODUS_WIDTH));
-                yi = (int) (Math.random() * (Commons.BOARD_HEIGHT - Commons.EXODUS_HEIGHT));
+                xi = (int) (Math.random() * (Commons.BOARD_WIDTH - Commons.BASE_WIDTH));
+                yi = (int) (Math.random() * (Commons.BOARD_HEIGHT - Commons.BASE_WIDTH));
             } while (Blocked(xi, yi));
 
             var exodus = new Exodus(xi, yi, this);
@@ -108,6 +107,8 @@ public class Board extends JPanel {
         for (Exodus exodus : exoduses) {
 
             g.drawImage(exodus.getImage(), exodus.getX(), exodus.getY(), this);
+            g.drawImage(exodus.getImageOfWeapon(), exodus.getX(), exodus.getY(), this);
+
 
         }
     }
@@ -115,9 +116,8 @@ public class Board extends JPanel {
     private void drawPlayers(Graphics g) {
         for (var player: players) {
             g.drawImage(player.getImage(), player.getX(), player.getY(), this);
-            if (player.isDying()) {
-                inGame = false;
-            }
+            g.drawImage(player.getImageOfWeapon(), player.getX(), player.getY(), this);
+
         }
     }
 
@@ -135,7 +135,7 @@ public class Board extends JPanel {
 
     private void drawBlocks(Graphics g) {
         for (var block: blocks){
-            g.drawImage(block.getImage(), block.getX(), block.getY(),this);
+            if (block.visible) g.drawImage(block.getImage(), block.getX(), block.getY(),this);
         }
     }
 
@@ -172,6 +172,9 @@ public class Board extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    /**
+     * Prints end screen of the game
+    */
     private void gameOver(Graphics g) {
 
         g.setColor(Color.black);
@@ -192,6 +195,11 @@ public class Board extends JPanel {
     }
 
     private void update() {
+        for (var player: players)
+            if (player.isDying()) {
+                inGame = false;
+                break;
+            }
 
         if (kills == maxKills) {
             inGame = false;
@@ -262,12 +270,11 @@ public class Board extends JPanel {
             int y = exodus.getY();
             for(var player: players){
                 if (exodus.inLine(player)) {
-                    if (!exodus.tryShot(player, time)) {
+                    if (exodus.tryShot(time)) {
+                        exodus.shot(shots, time);
+                    }
+                    else {
                         exodus.act();
-                    } else {
-                        var p = exodus.getLookingP();
-                        var shp = exodus.getShootingPoint();
-                        shots.add(new Shot(shp.x, shp.y, p.x, p.y, this));
                     }
                 } else {
                     exodus.act();
@@ -282,9 +289,13 @@ public class Board extends JPanel {
         repaint();
     }
 
+    /**
+     * check for if Sprite collide with other sprites
+     */
     public boolean collideWithOthers(Sprite sprite) {
         ///black magick probably right
-        if (sprite.getClass() == Shot.class) return false;
+        if (!sprite.collidable) return false;
+
         for(var block: blocks){
             if (sprite.collide(block)) return true;
         }
@@ -326,10 +337,8 @@ public class Board extends JPanel {
                 if (key == player.fireEvent) {
                     if (inGame) {
                         if (time - player.lastShoot > Commons.SHOTSPEED){
-                            player.lastShoot = time;
-                            Point p = player.getLookingP();
-                            Point shp = player.getShootingPoint();
-                            shots.add(new Shot(shp.x, shp.y, p.x, p.y,board));
+                            player.shot(shots, time);
+
                         }
                     }
                 }

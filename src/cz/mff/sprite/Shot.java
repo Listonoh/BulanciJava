@@ -9,13 +9,16 @@ public class Shot extends Sprite {
         initShot();
         this.dx = dx;
         this.dy = dy;
+        collidable = false;
     }
 
     private void initShot() {
         loadImages("src/images/shot%d.png");
     }
 
-
+    /**
+     * move the shot in direction and if it leave boundary of map it delete it
+     */
     public void update() {
         int x = (int) (getX() + this.dx * Commons.DELAY * Commons.SPEED * 2);
         int y = (int) (getY() + this.dy * Commons.DELAY * Commons.SPEED * 2);

@@ -15,7 +15,6 @@ public class LifeBar extends Sprite{
 
     public void update() {
         if (player != null){
-
             var newX = (int)(-min*((100.0-player.hp)/100));
             setX(newX);
         }
