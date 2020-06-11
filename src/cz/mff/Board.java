@@ -221,8 +221,8 @@ public class Board extends JPanel {
             sh.update();
         }
 
-        for (int i = 0; i < lifeBars.size(); i++) {
-            lifeBars.get(i).update();
+        for (LifeBar lifeBar : lifeBars) {
+            lifeBar.update();
         }
 
         // shot
@@ -325,9 +325,12 @@ public class Board extends JPanel {
 
                 if (key == player.fireEvent) {
                     if (inGame) {
-                        Point p = player.getLookingP();
-                        Point shp = player.getShootingPoint();
-                        shots.add(new Shot(shp.x, shp.y, p.x, p.y,board));
+                        if (time - player.lastShoot > Commons.SHOTSPEED){
+                            player.lastShoot = time;
+                            Point p = player.getLookingP();
+                            Point shp = player.getShootingPoint();
+                            shots.add(new Shot(shp.x, shp.y, p.x, p.y,board));
+                        }
                     }
                 }
             }

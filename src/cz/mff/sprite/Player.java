@@ -10,6 +10,7 @@ public class Player extends Sprite {
     public int playerNumber;
     public int fireEvent = KeyEvent.VK_SPACE;
     public int hp = 100;
+    public long lastShoot = 0;
 
     public Player(int x, int y,int i, Board board) {
         super(x, y, board);
@@ -73,9 +74,6 @@ public class Player extends Sprite {
 
     @Override
     public boolean collideXY(int x, int y) {
-        if (x + 88 < getX()|| getX() + width + 64 < x || y + 88 < getY() || getY() + height +64 < y){
-            return false;
-        }
-        return true;
+        return x + 88 >= getX() && getX() + width + 64 >= x && y + 88 >= getY() && getY() + height + 64 >= y;
     }
 }
