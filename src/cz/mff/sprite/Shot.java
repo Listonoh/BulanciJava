@@ -22,7 +22,7 @@ public class Shot extends Sprite {
     public void update() {
         int x = (int) (getX() + this.dx * Commons.DELAY * Commons.SPEED * 2);
         int y = (int) (getY() + this.dy * Commons.DELAY * Commons.SPEED * 2);
-        if(x < 0 || y< 0 || x > Commons.BOARD_WIDTH || y > Commons.BOARD_HEIGHT){
+        if (x < 0 || y < 0 || x > Commons.BOARD_WIDTH || y > Commons.BOARD_HEIGHT) {
             this.setDying(true);
         }
 

@@ -3,7 +3,7 @@ package cz.mff;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class Bulanci extends JFrame  {
+public class Bulanci extends JFrame {
 
     public Bulanci() {
 

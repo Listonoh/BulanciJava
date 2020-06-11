@@ -3,7 +3,7 @@ package cz.mff.sprite;
 import cz.mff.Board;
 import cz.mff.Commons;
 
-public class LifeBar extends Sprite{
+public class LifeBar extends Sprite {
     int min = Commons.BOARD_WIDTH;
     Player player;
 
@@ -14,8 +14,8 @@ public class LifeBar extends Sprite{
     }
 
     public void update() {
-        if (player != null){
-            var newX = (int)(-min*((100.0-player.hp)/100));
+        if (player != null) {
+            var newX = (int) (-min * ((100.0 - player.hp) / 100));
             setX(newX);
         }
     }

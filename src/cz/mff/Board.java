@@ -66,9 +66,9 @@ public class Board extends JPanel {
     private void initMap1() {
         BackImage = new ImageIcon(Commons.Map1).getImage();
 
-        blocks.add(new Block(95,303, true, this));
+        blocks.add(new Block(95, 303, true, this));
         players.add(new Player(Commons.PLAYER_X, Commons.PLAYER_Y, 0, this));
-        lifeBars.add(new LifeBar(0, d.height -60,players.get(0), this));
+        lifeBars.add(new LifeBar(0, d.height - 60, players.get(0), this));
         maxKills = 4;
 
         int xi, yi;
@@ -84,18 +84,18 @@ public class Board extends JPanel {
     }
 
     private boolean Blocked(int x, int y) {
-        for (var exodus: exoduses) {
-            if (exodus.collideXY(x,y)){
+        for (var exodus : exoduses) {
+            if (exodus.collideXY(x, y)) {
                 return true;
             }
         }
-        for (var block: blocks) {
-            if (block.collideXY(x,y)){
+        for (var block : blocks) {
+            if (block.collideXY(x, y)) {
                 return true;
             }
         }
-        for (var player: players){
-            if (player.collideXY(x,y)){
+        for (var player : players) {
+            if (player.collideXY(x, y)) {
                 return true;
             }
         }
@@ -114,7 +114,7 @@ public class Board extends JPanel {
     }
 
     private void drawPlayers(Graphics g) {
-        for (var player: players) {
+        for (var player : players) {
             g.drawImage(player.getImage(), player.getX(), player.getY(), this);
             g.drawImage(player.getImageOfWeapon(), player.getX(), player.getY(), this);
 
@@ -128,14 +128,14 @@ public class Board extends JPanel {
     }
 
     private void drawLifeBars(Graphics g) {
-        for (var lb : lifeBars){
-            g.drawImage(lb.getImage(),lb.getX(),lb.getY(),this);
+        for (var lb : lifeBars) {
+            g.drawImage(lb.getImage(), lb.getX(), lb.getY(), this);
         }
     }
 
     private void drawBlocks(Graphics g) {
-        for (var block: blocks){
-            if (block.visible) g.drawImage(block.getImage(), block.getX(), block.getY(),this);
+        for (var block : blocks) {
+            if (block.visible) g.drawImage(block.getImage(), block.getX(), block.getY(), this);
         }
     }
 
@@ -149,9 +149,9 @@ public class Board extends JPanel {
 
         g.setColor(Color.black);
         g.fillRect(0, 0, d.width, d.height);
-        g.drawImage(BackImage,0,0,this);
+        g.drawImage(BackImage, 0, 0, this);
         g.setColor(Color.green);
-        g.drawString(String.valueOf(kills), 0,0);
+        g.drawString(String.valueOf(kills), 0, 0);
 
         if (inGame) {
             drawExoduses(g);
@@ -174,7 +174,7 @@ public class Board extends JPanel {
 
     /**
      * Prints end screen of the game
-    */
+     */
     private void gameOver(Graphics g) {
 
         g.setColor(Color.black);
@@ -195,7 +195,7 @@ public class Board extends JPanel {
     }
 
     private void update() {
-        for (var player: players)
+        for (var player : players)
             if (player.isDying()) {
                 inGame = false;
                 break;
@@ -205,13 +205,12 @@ public class Board extends JPanel {
             inGame = false;
             timer.stop();
             message = "Game won!";
-        }
-        else if(time > maxTime){
+        } else if (time > maxTime) {
             inGame = false;
             timer.stop();
             message = "Game lost!, no time left";
         }
-        if (players.size() == 0){
+        if (players.size() == 0) {
             inGame = false;
             timer.stop();
             message = "Game lost!";
@@ -221,7 +220,7 @@ public class Board extends JPanel {
         players.removeIf(Sprite::isDying);
 
         // player
-        for (var player: players){
+        for (var player : players) {
             player.act();
         }
 
@@ -235,30 +234,30 @@ public class Board extends JPanel {
 
         // shot
         for (var shot : new ArrayList<>(shots)) {
-            if (shot.isDying()){
+            if (shot.isDying()) {
                 shots.remove(shot);
                 continue;
             }
             for (Exodus exodus : exoduses) {
-                if (exodus.collide(shot)){
+                if (exodus.collide(shot)) {
                     exodus.loadImage(explImg);
                     exodus.setDying(true);
                     kills++;
                     shots.remove(shot);
                 }
             }
-            for (var player : players){
-                if (player.collide(shot)){
+            for (var player : players) {
+                if (player.collide(shot)) {
                     shots.remove(shot);
                     player.hp -= Commons.SHOTDMG;
-                    if(player.hp <= 0){
+                    if (player.hp <= 0) {
                         player.loadImage(explImg);
                         player.setDying(true);
                     }
                 }
             }
-            for (var block : blocks){
-                if(block.collide(shot)){
+            for (var block : blocks) {
+                if (block.collide(shot)) {
                     shots.remove(shot);
                 }
             }
@@ -266,7 +265,7 @@ public class Board extends JPanel {
 
         for (Exodus exodus : exoduses) {
 
-            for(var player: players){
+            for (var player : players) {
                 if (exodus.inLine(player)) {
                     if (exodus.tryShot(time)) {
                         exodus.shot(shots, time);
@@ -291,15 +290,15 @@ public class Board extends JPanel {
         ///black magick probably right
         if (!sprite.collidable) return false;
 
-        for(var block: blocks){
+        for (var block : blocks) {
             if (sprite.collide(block)) return true;
         }
 
-        for(var exodus: exoduses){
+        for (var exodus : exoduses) {
             if (sprite.collide(exodus)) return true;
         }
 
-        for(var player: players ){
+        for (var player : players) {
             if (sprite.collide(player)) return true;
         }
         return false;
@@ -317,21 +316,21 @@ public class Board extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            for (var player : players){
+            for (var player : players) {
                 player.keyReleased(e);
             }
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            for(var player: players){
+            for (var player : players) {
                 player.keyPressed(e);
 
                 int key = e.getKeyCode();
 
                 if (key == player.fireEvent) {
                     if (inGame) {
-                        if (time - player.lastShoot > Commons.SHOTSPEED){
+                        if (time - player.lastShoot > Commons.SHOTSPEED) {
                             player.shot(shots, time);
 
                         }

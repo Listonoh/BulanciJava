@@ -17,16 +17,16 @@ public class Pistol {
     int shotSpeed = 15;
     Image[] images;
 
-    public Pistol(){
+    public Pistol() {
         images = new Image[4];
         for (int i = 0; i < 4; i++) {
-            var shotImg = String.format(Commons.Pistol,i);
+            var shotImg = String.format(Commons.Pistol, i);
             var ii = new ImageIcon(shotImg).getImage();
             images[i] = ii;
         }
     }
 
-    public boolean shootable (long time){
+    public boolean shootable(long time) {
         return time - lastShot > shotSpeed;
     }
 
@@ -36,7 +36,7 @@ public class Pistol {
         if (shotsLeft == 0) shotsLeft = rounds;
 
 
-        if (shootable(time)){
+        if (shootable(time)) {
             ret = CreateShoots(holder);
             lastShot = time;
             shotsLeft -= 1;

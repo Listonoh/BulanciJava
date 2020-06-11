@@ -9,10 +9,10 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Shotgun extends Pistol {
-    public Shotgun(){
+    public Shotgun() {
         images = new Image[4];
         for (int i = 0; i < 4; i++) {
-            var shotImg = String.format(Commons.Shotgun,i);
+            var shotImg = String.format(Commons.Shotgun, i);
             var ii = new ImageIcon(shotImg).getImage();
             images[i] = ii;
         }
@@ -23,14 +23,15 @@ public class Shotgun extends Pistol {
         var ret = new ArrayList<Shot>();
         var p = holder.getLookingP();
         var shp = holder.getShootingPoint();
-        int x2 = shp.x; int x3 = shp.x;
-        int y2 = shp.y; int y3 = shp.y;
+        int x2 = shp.x;
+        int x3 = shp.x;
+        int y2 = shp.y;
+        int y3 = shp.y;
 
-        if (holder.getLooking() % 2 != 0){ // up or down
+        if (holder.getLooking() % 2 != 0) { // up or down
             y2 += 10;
             y3 -= 10;
-        }
-        else {
+        } else {
             x2 += 10;
             x3 -= 10;
         }

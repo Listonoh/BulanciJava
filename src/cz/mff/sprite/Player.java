@@ -17,7 +17,7 @@ public class Player extends Sprite {
     public long lastShoot = 0;
     private Pistol pistol = new Shotgun();
 
-    public Player(int x, int y,int i, Board board) {
+    public Player(int x, int y, int i, Board board) {
         super(x, y, board);
         initPlayer();
         playerNumber = i;
@@ -35,7 +35,7 @@ public class Player extends Sprite {
 //        System.out.println("dx: " + dx + "  dy: " + dy );
         var rx = getX();
         var ry = getY();
-        var l = Math.sqrt(dx*dx + dy*dy);
+        var l = Math.sqrt(dx * dx + dy * dy);
         if (l == 0) l = 1;
         var ddx = dx * Commons.DELAY * Commons.SPEED / l;
         var ddy = dy * Commons.DELAY * Commons.SPEED / l;
