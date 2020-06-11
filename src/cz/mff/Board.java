@@ -266,19 +266,14 @@ public class Board extends JPanel {
 
         for (Exodus exodus : exoduses) {
 
-            int x = exodus.getX();
-            int y = exodus.getY();
             for(var player: players){
                 if (exodus.inLine(player)) {
                     if (exodus.tryShot(time)) {
                         exodus.shot(shots, time);
+                        continue;
                     }
-                    else {
-                        exodus.act();
-                    }
-                } else {
-                    exodus.act();
                 }
+                exodus.act();
             }
         }
     }

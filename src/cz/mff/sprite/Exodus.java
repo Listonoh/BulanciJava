@@ -11,7 +11,7 @@ public class Exodus extends Sprite {
     int timer = 0;
     long lastShot = 0;
     int dx, dy;
-    private int lastSpotedPlayer;
+    private int lastSpotedPlayer = 0;
     private Pistol pistol = new Pistol();
 
     public Exodus(int x, int y, Board board) {
