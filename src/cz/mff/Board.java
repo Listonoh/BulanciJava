@@ -32,15 +32,17 @@ public class Board extends JPanel {
     private Image BackImage;
     private long maxTime = 2000;
 
+    ///buttons
+    JButton Start;
+    JButton Retry;
+    JButton Exit;
+
 
     public Board() {
-
         initBoard();
-        gameInit();
     }
 
     private void initBoard() {
-
         addKeyListener(new TAdapter());
         setFocusable(true);
         d = new Dimension(Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
@@ -150,8 +152,9 @@ public class Board extends JPanel {
         g.setColor(Color.black);
         g.fillRect(0, 0, d.width, d.height);
         g.drawImage(BackImage, 0, 0, this);
-        g.setColor(Color.green);
-        g.drawString(String.valueOf(kills), 0, 0);
+        g.drawString(String.valueOf(kills), 0, 25);
+        g.drawString(String.valueOf(maxTime - time), 50, 50);
+
 
         if (inGame) {
             drawExoduses(g);
@@ -170,6 +173,29 @@ public class Board extends JPanel {
         }
 
         Toolkit.getDefaultToolkit().sync();
+    }
+
+
+    private void gameStart(Graphics g){
+        JButton b;
+        b = new JButton("Start");
+        this.add(b);
+        //this.compo
+        g.setColor(Color.black);
+        g.fillRect(0, 0, Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
+
+        g.setColor(new Color(0, 32, 48));
+        g.fillRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+        g.setColor(Color.white);
+        g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+
+        var small = new Font("Helvetica", Font.BOLD, 14);
+        var fontMetrics = this.getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(message, (Commons.BOARD_WIDTH - fontMetrics.stringWidth(message)) / 2,
+                Commons.BOARD_WIDTH / 2);
     }
 
     /**

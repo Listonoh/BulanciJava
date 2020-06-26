@@ -80,12 +80,13 @@ public class Sprite {
      * @param y new position on the map
      */
     public void setY(int y) {
+        var last = this.y;
         if (y > this.y) looking = 2;
         if (y < this.y) looking = 0;
         this.y = y;
 
         if (board.collideWithOthers(this)) {
-            this.y = y;
+            this.y = last;
         }
 
         if (y <= 0) {
@@ -134,7 +135,7 @@ public class Sprite {
         var p = new Point(Commons.shootingFrom[looking]);
         if (looking % 2 == 1) { //left and right
             p.x *= width;
-            p.y *= height / 2;
+            p.y *= (double) height / 2;
         } else {
             p.x *= width;
             p.y *= height;
@@ -173,16 +174,14 @@ public class Sprite {
 
     /**
      * if collide with another Sprite
-     * black magick probably right
+     * black magic probably right
      */
-
     public boolean collide(Sprite collider) {
         if (collider == this) return false;
-        return !((collider.getX() + collider.width < (this.x) //far from left
-                || collider.getX() > (this.x + this.width)) //or far from right
-                || (collider.getY() + collider.height < (this.y) ///far from top
-                || collider.getY() > (this.y + this.height))); ///far from bottom
-
+        return (collider.getX() < this.x + this.width &&
+                collider.getX() + collider.width > this.x &&
+                collider.getY() < this.y + this.height &&
+                collider.getY() + collider.height > this.y);
     }
 
     public void shot(ArrayList<Shot> shots, long time) {
