@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board extends JPanel {
+    private enum states {INGAME, MENU, ENDGAME}
 
+    private states state = states.MENU;
     private Dimension d;
     private List<Exodus> exoduses = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
@@ -23,7 +25,7 @@ public class Board extends JPanel {
     private int kills = 0;
     private int maxKills;
 
-    private boolean inGame = true;
+    //private boolean inGame = true;
     private String explImg = "src/images/explosion%d.png";
     private String message = "Game Over";
 
@@ -50,22 +52,22 @@ public class Board extends JPanel {
 
         timer = new Timer(Commons.DELAY, new GameCycle());
         timer.start();
-        gameInit();
+        menuInit();
     }
 
     /**
      * Resets all resources and loads new map
      */
-    private void gameInit() {
+    private void gameClear() {
         players = new ArrayList<>();
         lifeBars = new ArrayList<>();
         exoduses = new ArrayList<>();
         shots = new ArrayList<>();
         blocks = new ArrayList<>();
-        initMap1();
     }
 
     private void initMap1() {
+        gameClear();
         BackImage = new ImageIcon(Commons.Map1).getImage();
 
         blocks.add(new Block(95, 303, true, this));
@@ -153,41 +155,65 @@ public class Board extends JPanel {
         g.fillRect(0, 0, d.width, d.height);
         g.drawImage(BackImage, 0, 0, this);
         g.drawString(String.valueOf(kills), 0, 25);
-        g.drawString(String.valueOf(maxTime - time), 50, 50);
+        g.drawString(String.valueOf((maxTime - time) / 10), 50, 50);
 
 
-        if (inGame) {
-            drawExoduses(g);
-            drawPlayers(g);
-            drawShots(g);
-            drawBlocks(g);
-            drawLifeBars(g);
-
-        } else {
-
-            if (timer.isRunning()) {
-                timer.stop();
+        switch (state) {
+            case INGAME -> {
+                drawExoduses(g);
+                drawPlayers(g);
+                drawShots(g);
+                drawBlocks(g);
+                drawLifeBars(g);
+            }
+            case MENU -> {
+                if (timer.isRunning()) {
+                    timer.stop();
+                }
+                drawMenu(g);
             }
 
-            gameOver(g);
+            case ENDGAME -> {
+                if (timer.isRunning()) {
+                    timer.stop();
+                }
+                drawGameOver(g);
+            }
         }
-
         Toolkit.getDefaultToolkit().sync();
     }
 
 
-    private void gameStart(Graphics g){
-        JButton b;
-        b = new JButton("Start");
-        this.add(b);
-        //this.compo
-        g.setColor(Color.black);
-        g.fillRect(0, 0, Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
+    private void menuInit() {
 
-        g.setColor(new Color(0, 32, 48));
-        g.fillRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
-        g.setColor(Color.white);
-        g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+        Start = new JButton("Start");
+        Start.addActionListener(e -> {
+            timer.restart();
+            setState(states.INGAME);
+            initMap1();
+        });
+        this.add(Start);
+
+        Retry = new JButton("Retry");
+        Retry.addActionListener(e -> {
+            timer.restart();
+            setState(states.INGAME);
+            initMap1();
+        });
+        this.add(Retry);
+        Retry.setVisible(false);
+
+        Exit = new JButton("Exit");
+        this.add(Exit);
+        Exit.addActionListener(e -> System.exit(0));
+
+
+    }
+
+    /**
+     * Prints end screen of the game
+     */
+    private void drawMenu(Graphics g) {
 
         var small = new Font("Helvetica", Font.BOLD, 14);
         var fontMetrics = this.getFontMetrics(small);
@@ -201,8 +227,7 @@ public class Board extends JPanel {
     /**
      * Prints end screen of the game
      */
-    private void gameOver(Graphics g) {
-
+    private void drawGameOver(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(0, 0, Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
 
@@ -223,21 +248,21 @@ public class Board extends JPanel {
     private void update() {
         for (var player : players)
             if (player.isDying()) {
-                inGame = false;
+                setState(states.ENDGAME);
                 break;
             }
 
         if (kills == maxKills) {
-            inGame = false;
+            setState(states.ENDGAME);
             timer.stop();
             message = "Game won!";
         } else if (time > maxTime) {
-            inGame = false;
+            setState(states.ENDGAME);
             timer.stop();
             message = "Game lost!, no time left";
         }
         if (players.size() == 0) {
-            inGame = false;
+            setState(states.ENDGAME);
             timer.stop();
             message = "Game lost!";
         }
@@ -355,14 +380,34 @@ public class Board extends JPanel {
                 int key = e.getKeyCode();
 
                 if (key == player.fireEvent) {
-                    if (inGame) {
+                    if (getState() == states.INGAME) {
                         if (time - player.lastShoot > Commons.SHOTSPEED) {
                             player.shot(shots, time);
-
                         }
                     }
                 }
             }
         }
+    }
+
+
+    private void setState(states state) {
+        if (state == states.INGAME && Exit.isVisible()) {
+            Exit.setVisible(false);
+            Start.setVisible(false);
+            Retry.setVisible(false);
+        } else if (state != states.INGAME) {
+            Exit.setVisible(true);
+            if (state == states.MENU) {
+                Start.setVisible(true);
+            } else {
+                Retry.setVisible(true);
+            }
+        }
+        this.state = state;
+    }
+
+    private states getState() {
+        return state;
     }
 }
