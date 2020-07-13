@@ -1,0 +1,4 @@
+na cem se da jeste pracovat:
+- hra se dá lehce rozšířit pro 2 hráče (není implementováno v tvorbě mapy + potřebuje se přidat do Commons ovládaní druhého hráče)
+- animace - staci upravit ladingImages a k getImages dat timer( kod je lehce rozšířitelný)
+- vizualizace nábojů v gui
