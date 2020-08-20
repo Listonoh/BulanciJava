@@ -12,7 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board extends JPanel {
-    private enum states {INGAME, MENU, ENDGAME}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    private enum states {
+        INGAME, MENU, ENDGAME
+    }
 
     private states state = states.MENU;
     private Dimension d;
@@ -21,24 +28,22 @@ public class Board extends JPanel {
     private ArrayList<Shot> shots = new ArrayList<>();
     private ArrayList<Block> blocks = new ArrayList<>();
     private ArrayList<LifeBar> lifeBars = new ArrayList<>();
-    private Board board = this;
-    private int kills = 0;
+    private int kills;
     private int maxKills;
 
-    //private boolean inGame = true;
-    private String explImg = "src/images/explosion%d.png";
-    private String message = "Game Over";
-
+    // private boolean inGame = true;
+    private final String explImg = "src/images/explosion%d.png";
+    private final long maxTime = 2000;
+    
+    private String message;
     private Timer timer;
-    private long time = 0;
+    private long time;
     private Image BackImage;
-    private long maxTime = 2000;
 
-    ///buttons
+    /// buttons
     JButton Start;
     JButton Retry;
     JButton Exit;
-
 
     public Board() {
         initBoard();
@@ -49,12 +54,12 @@ public class Board extends JPanel {
         setFocusable(true);
         d = new Dimension(Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
         setBackground(Color.black);
-
         timer = new Timer(Commons.DELAY, new GameCycle());
         timer.start();
+        
         menuInit();
     }
-
+    
     /**
      * Resets all resources and loads new map
      */
@@ -64,8 +69,13 @@ public class Board extends JPanel {
         exoduses = new ArrayList<>();
         shots = new ArrayList<>();
         blocks = new ArrayList<>();
+        message = "Game Over";
+        time = 0;
+        kills = 0;
+        timer = new Timer(Commons.DELAY, new GameCycle());
+        timer.start();
     }
-
+    
     private void initMap1() {
         gameClear();
         BackImage = new ImageIcon(Commons.Map1).getImage();
@@ -82,23 +92,23 @@ public class Board extends JPanel {
                 yi = (int) (Math.random() * (Commons.BOARD_HEIGHT - Commons.BASE_WIDTH));
             } while (Blocked(xi, yi));
 
-            var exodus = new Exodus(xi, yi, this);
+            final var exodus = new Exodus(xi, yi, this);
             exoduses.add(exodus);
         }
     }
 
-    private boolean Blocked(int x, int y) {
-        for (var exodus : exoduses) {
+    private boolean Blocked(final int x, final int y) {
+        for (final var exodus : exoduses) {
             if (exodus.collideXY(x, y)) {
                 return true;
             }
         }
-        for (var block : blocks) {
+        for (final var block : blocks) {
             if (block.collideXY(x, y)) {
                 return true;
             }
         }
-        for (var player : players) {
+        for (final var player : players) {
             if (player.collideXY(x, y)) {
                 return true;
             }
@@ -106,57 +116,56 @@ public class Board extends JPanel {
         return false;
     }
 
-    private void drawExoduses(Graphics g) {
+    private void drawExoduses(final Graphics g) {
 
-        for (Exodus exodus : exoduses) {
+        for (final Exodus exodus : exoduses) {
 
             g.drawImage(exodus.getImage(), exodus.getX(), exodus.getY(), this);
             g.drawImage(exodus.getImageOfWeapon(), exodus.getX(), exodus.getY(), this);
 
-
         }
     }
 
-    private void drawPlayers(Graphics g) {
-        for (var player : players) {
+    private void drawPlayers(final Graphics g) {
+        for (final var player : players) {
             g.drawImage(player.getImage(), player.getX(), player.getY(), this);
             g.drawImage(player.getImageOfWeapon(), player.getX(), player.getY(), this);
 
         }
     }
 
-    private void drawShots(Graphics g) {
-        for (var shot : shots) {
+    private void drawShots(final Graphics g) {
+        for (final var shot : shots) {
             g.drawImage(shot.getImage(), shot.getX(), shot.getY(), this);
         }
     }
 
-    private void drawLifeBars(Graphics g) {
-        for (var lb : lifeBars) {
+    private void drawLifeBars(final Graphics g) {
+        for (final var lb : lifeBars) {
             g.drawImage(lb.getImage(), lb.getX(), lb.getY(), this);
         }
     }
 
-    private void drawBlocks(Graphics g) {
-        for (var block : blocks) {
-            if (block.visible) g.drawImage(block.getImage(), block.getX(), block.getY(), this);
+    private void drawBlocks(final Graphics g) {
+        for (final var block : blocks) {
+            if (block.visible)
+                g.drawImage(block.getImage(), block.getX(), block.getY(), this);
         }
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
     }
 
-    private void doDrawing(Graphics g) {
+    private void doDrawing(final Graphics g) {
 
         g.setColor(Color.black);
         g.fillRect(0, 0, d.width, d.height);
         g.drawImage(BackImage, 0, 0, this);
         g.drawString(String.valueOf(kills), 0, 25);
         g.drawString(String.valueOf((maxTime - time) / 10), 50, 50);
-
 
         switch (state) {
             case INGAME -> {
@@ -183,12 +192,10 @@ public class Board extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
-
     private void menuInit() {
 
         Start = new JButton("Start");
         Start.addActionListener(e -> {
-            timer.restart();
             setState(states.INGAME);
             initMap1();
         });
@@ -196,38 +203,41 @@ public class Board extends JPanel {
 
         Retry = new JButton("Retry");
         Retry.addActionListener(e -> {
-            timer.restart();
             setState(states.INGAME);
             initMap1();
         });
-        this.add(Retry);
         Retry.setVisible(false);
+        this.add(Retry);
 
         Exit = new JButton("Exit");
         this.add(Exit);
         Exit.addActionListener(e -> System.exit(0));
-
 
     }
 
     /**
      * Prints end screen of the game
      */
-    private void drawMenu(Graphics g) {
+    private void drawMenu(final Graphics g) {
 
-        var small = new Font("Helvetica", Font.BOLD, 14);
-        var fontMetrics = this.getFontMetrics(small);
+        final var small = new Font("Helvetica", Font.BOLD, 14);
+        final var fontMetrics = this.getFontMetrics(small);
+
+        g.setColor(new Color(0, 32, 48));
+        g.fillRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
+        g.setColor(Color.white);
+        g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message, (Commons.BOARD_WIDTH - fontMetrics.stringWidth(message)) / 2,
+        g.drawString("Welcome", (Commons.BOARD_WIDTH - fontMetrics.stringWidth("Welcome")) / 2,
                 Commons.BOARD_WIDTH / 2);
     }
 
     /**
      * Prints end screen of the game
      */
-    private void drawGameOver(Graphics g) {
+    private void drawGameOver(final Graphics g) {
         g.setColor(Color.black);
         g.fillRect(0, 0, Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
 
@@ -236,60 +246,62 @@ public class Board extends JPanel {
         g.setColor(Color.white);
         g.drawRect(50, Commons.BOARD_WIDTH / 2 - 30, Commons.BOARD_WIDTH - 100, 50);
 
-        var small = new Font("Helvetica", Font.BOLD, 14);
-        var fontMetrics = this.getFontMetrics(small);
+        final var small = new Font("Helvetica", Font.BOLD, 14);
+        final var fontMetrics = this.getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message, (Commons.BOARD_WIDTH - fontMetrics.stringWidth(message)) / 2,
-                Commons.BOARD_WIDTH / 2);
+        g.drawString(message, (Commons.BOARD_WIDTH - fontMetrics.stringWidth(message)) / 2, Commons.BOARD_WIDTH / 2);
     }
 
     private void update() {
-        for (var player : players)
+        if (state != states.INGAME)
+            return;
+        for (final var player : players)
             if (player.isDying()) {
                 setState(states.ENDGAME);
                 break;
             }
-
         if (kills == maxKills) {
             setState(states.ENDGAME);
             timer.stop();
             message = "Game won!";
+            return;
         } else if (time > maxTime) {
             setState(states.ENDGAME);
             timer.stop();
             message = "Game lost!, no time left";
-        }
-        if (players.size() == 0) {
+            return;
+        } else if (players.size() == 0) {
             setState(states.ENDGAME);
             timer.stop();
             message = "Game lost!";
+            return;
         }
 
         exoduses.removeIf(Sprite::isDying);
         players.removeIf(Sprite::isDying);
 
         // player
-        for (var player : players) {
+        for (final var player : players) {
             player.act();
         }
 
-        for (var sh : shots) {
+        for (final var sh : shots) {
             sh.update();
         }
 
-        for (LifeBar lifeBar : lifeBars) {
+        for (final LifeBar lifeBar : lifeBars) {
             lifeBar.update();
         }
 
         // shot
-        for (var shot : new ArrayList<>(shots)) {
+        for (final var shot : new ArrayList<>(shots)) {
             if (shot.isDying()) {
                 shots.remove(shot);
                 continue;
             }
-            for (Exodus exodus : exoduses) {
+            for (final Exodus exodus : exoduses) {
                 if (exodus.collide(shot)) {
                     exodus.loadImage(explImg);
                     exodus.setDying(true);
@@ -297,7 +309,7 @@ public class Board extends JPanel {
                     shots.remove(shot);
                 }
             }
-            for (var player : players) {
+            for (final var player : players) {
                 if (player.collide(shot)) {
                     shots.remove(shot);
                     player.hp -= Commons.SHOTDMG;
@@ -307,16 +319,16 @@ public class Board extends JPanel {
                     }
                 }
             }
-            for (var block : blocks) {
+            for (final var block : blocks) {
                 if (block.collide(shot)) {
                     shots.remove(shot);
                 }
             }
         }
 
-        for (Exodus exodus : exoduses) {
+        for (final Exodus exodus : exoduses) {
 
-            for (var player : players) {
+            for (final var player : players) {
                 if (exodus.inLine(player)) {
                     if (exodus.tryShot(time)) {
                         exodus.shot(shots, time);
@@ -337,20 +349,24 @@ public class Board extends JPanel {
     /**
      * check for if Sprite collide with other sprites
      */
-    public boolean collideWithOthers(Sprite sprite) {
-        ///black magick probably right
-        if (!sprite.collidable) return false;
+    public boolean collideWithOthers(final Sprite sprite) {
+        /// black magick probably right
+        if (!sprite.collidable)
+            return false;
 
-        for (var block : blocks) {
-            if (sprite.collide(block)) return true;
+        for (final var block : blocks) {
+            if (sprite.collide(block))
+                return true;
         }
 
-        for (var exodus : exoduses) {
-            if (sprite.collide(exodus)) return true;
+        for (final var exodus : exoduses) {
+            if (sprite.collide(exodus))
+                return true;
         }
 
-        for (var player : players) {
-            if (sprite.collide(player)) return true;
+        for (final var player : players) {
+            if (sprite.collide(player))
+                return true;
         }
         return false;
     }
@@ -358,7 +374,7 @@ public class Board extends JPanel {
     private class GameCycle implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
             doGameCycle();
         }
     }
@@ -366,18 +382,18 @@ public class Board extends JPanel {
     private class TAdapter extends KeyAdapter {
 
         @Override
-        public void keyReleased(KeyEvent e) {
-            for (var player : players) {
+        public void keyReleased(final KeyEvent e) {
+            for (final var player : players) {
                 player.keyReleased(e);
             }
         }
 
         @Override
-        public void keyPressed(KeyEvent e) {
-            for (var player : players) {
+        public void keyPressed(final KeyEvent e) {
+            for (final var player : players) {
                 player.keyPressed(e);
 
-                int key = e.getKeyCode();
+                final int key = e.getKeyCode();
 
                 if (key == player.fireEvent) {
                     if (getState() == states.INGAME) {
@@ -390,8 +406,7 @@ public class Board extends JPanel {
         }
     }
 
-
-    private void setState(states state) {
+    private void setState(final states state) {
         if (state == states.INGAME && Exit.isVisible()) {
             Exit.setVisible(false);
             Start.setVisible(false);
