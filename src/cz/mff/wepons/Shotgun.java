@@ -21,7 +21,7 @@ public class Shotgun extends Pistol {
     @Override
     ArrayList<Shot> CreateShoots(Sprite holder) {
         var ret = new ArrayList<Shot>();
-        var p = holder.getLookingP();
+        var p = holder.getLookingPoint();
         var shp = holder.getShootingPoint();
         int x2 = shp.x;
         int x3 = shp.x;

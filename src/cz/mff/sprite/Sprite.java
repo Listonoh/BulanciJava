@@ -151,7 +151,7 @@ public class Sprite {
     /**
      * @return correct vector where Sprite is looking
      */
-    public Point getLookingP() {
+    public Point getLookingPoint() {
         return Commons.lookingArr[looking];
     }
 

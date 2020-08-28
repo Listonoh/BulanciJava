@@ -28,11 +28,7 @@ public class Bulanci extends JFrame {
     }
 
     public static void main(String[] args) {
-
-        EventQueue.invokeLater(() -> {
-
-            var ex = new Bulanci();
-            ex.setVisible(true);
-        });
+        var ex = new Bulanci();
+        ex.setVisible(true);
     }
 }

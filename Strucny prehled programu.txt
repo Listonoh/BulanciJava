@@ -1,8 +1,0 @@
-Program se zakládá na swing-ové aplikaci. 
-Na začátku se nastaví velikost okna a započne timer kterýmu se jako listenner přidá právě vytvořená hra.
-Pokaždé když timer zavolá hru tak se provede jeden herní cyklus:
-	0) přidá se k proměnné času (var time) jednička za prošlý herní cyklus
-	1) aktualizuje se vše co má ve funkci update (celá herní logika)
-	2) překreslí plochu a zobrazí ji
-	
-když dojde čas nebo hráč umře (klesnou mu životy pod 0) pak zkončí hra a aplikace se musí ukončit

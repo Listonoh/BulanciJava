@@ -257,11 +257,12 @@ public class Board extends JPanel {
     private void update() {
         if (state != states.INGAME)
             return;
-        for (final var player : players)
+        for (final var player : players){
             if (player.isDying()) {
                 setState(states.ENDGAME);
                 break;
             }
+        }
         if (kills == maxKills) {
             setState(states.ENDGAME);
             timer.stop();
@@ -392,9 +393,8 @@ public class Board extends JPanel {
         public void keyPressed(final KeyEvent e) {
             for (final var player : players) {
                 player.keyPressed(e);
-
+                
                 final int key = e.getKeyCode();
-
                 if (key == player.fireEvent) {
                     if (getState() == states.INGAME) {
                         if (time - player.lastShoot > Commons.SHOTSPEED) {

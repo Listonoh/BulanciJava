@@ -47,7 +47,7 @@ public class Pistol {
 
     ArrayList<Shot> CreateShoots(Sprite holder) {
         var ret = new ArrayList<Shot>();
-        var p = holder.getLookingP();
+        var p = holder.getLookingPoint();
         var shp = holder.getShootingPoint();
         ret.add(new Shot(shp.x, shp.y, p.x, p.y, holder.board));
         return ret;

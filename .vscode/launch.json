@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Bulanci",
+            "request": "launch",
+            "mainClass": "cz.mff.Bulanci",
+            "projectName": "BulanciJava_ddaf9150"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"
