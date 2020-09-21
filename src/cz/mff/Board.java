@@ -257,12 +257,7 @@ public class Board extends JPanel {
     private void update() {
         if (state != states.INGAME)
             return;
-        for (final var player : players){
-            if (player.isDying()) {
-                setState(states.ENDGAME);
-                break;
-            }
-        }
+
         if (kills == maxKills) {
             setState(states.ENDGAME);
             timer.stop();

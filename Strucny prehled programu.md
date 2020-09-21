@@ -4,13 +4,8 @@ Program se zakládá na swing-ové aplikaci, tedy aplikace jako taková extenduj
 
 ## Main class "Bulanci"
 
-Vytvoří novou třídu "Bulanci", dále vytvoří hrací plochu "Board" a nastaví ji velikost a další parametry:
-
-``` java
-setDefaultCloseOperation(EXIT_ON_CLOSE);
-setResizable(false);
-setLocationRelativeTo(null);
-```
+V metodě main se vytvoří nová instance třídy "Bulanci".
+Tím se v konstruktoru třídy "Bulanci" vytvoří a přidá instance hrací plochy "Board" a nastaví si velikost a další parametry.
 
 ## class "Board"
 
@@ -18,13 +13,7 @@ Při vytváření přidá ```keyListener(new TAdapter())``` který se stará o u
 
 Dále nastaví dimenze a pozadí třídy "Board"
 
-```java
-setFocusable(true);
-d = new Dimension(Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
-setBackground(Color.black);
-```
-
-Začne timer ```timer = new Timer(Commons.DELAY, new GameCycle());``` a GameCycle extenduje `ActionListener`, ze kterého se následně volá `doGameCycle()` který pak aktualizuje celou aplikaci po určité době (`Commons.DELAY`).
+Hra postupuje periodicky v metodě doGameCycle, která vyhodnocuje stav hry a vyvolá překreslení, dále se periodicky volá v intervalu který určuje `Commons.DELAY`.
 
 A zinicializuje menu. `menuInit();`
 
@@ -32,43 +21,24 @@ A zinicializuje menu. `menuInit();`
 
 Vlastně předává vstup z klávesnice instanci třídy "player". Až na střelbu, protože stav board a čas mi připadá lepší řešit rovnou v třídě "Board", než posílat odkazy do hráče aby se sám rozhodl. Ale asi do budoucna, kdyby tato aplikace měla být složitější tak bych tuto logiku do třídy "player" přesunul.
 
+### Stavy hry (states)
+
+Určují v jakém je Board stavu, tedy jestli je hráč v menu, ve hře, nebo na konci hry.
+Tento stav se mění v metodě `update()` při splnění některé z podmínek na konec hry (více v update).
+
 ### gameCycle
 
 Zvedne hodnotu timeru o 1. zavolá update() (provede jeden krok) a pak překreslí plochu.
 
 #### update()
 
-Zkontroluje jestli nemá náhodou skončit hru:
+Zkontroluje jestli náhodou nebyla splněna podmínka pro ukončení hry:
 
-``` java
-if (state != states.INGAME)
-  return;
-for (final var player : players){
-  if (player.isDying()) {
-    setState(states.ENDGAME);
-    break;
-  }
-}
-if (kills == maxKills) {
-  setState(states.ENDGAME);
-  timer.stop();
-  message = "Game won!";
-  return;
-}
-else if (time > maxTime) {
-  setState(states.ENDGAME);
-  timer.stop();
-  message = "Game lost!, no time left";
-  return;
-}
-else if (players.size() == 0) {
-  setState(states.ENDGAME);
-  timer.stop();
-  message = "Game lost!";
-  return;
-}
+- byli zabiti všichni nepřátelé
+- došel čas
+- všichni hráči umřel
 
-```
+Když nastane nějaká z možností tak se stav změní na `ENDGAME` a skryje se hrací plocha a objeví se tlačítka pro spuštění hry nebo její ukončení (je to nepěkně schované v metodě `setState()`). A díky tomu že hra není ve stavu `INGAME`, tak se metoda `update()` hned po zavolání vrátí, bez toho aby něco dalšího dělala.
 
 Odstraní mrtvoly.
 
@@ -78,9 +48,9 @@ Zkontroluje zda kulka něco netrefila a případně udělí poškození hráči,
 
 A pak se pohnou nepřátelé a případně vystřelí.
 
-## sprites
+## Sprites
 
-Základní třídu mám Sprite od které všechny ostatní Sprity dědí.
+"Sprites" je základní třída ve hře od které všechny herní objekty dědí (všechny jí implementují).
 
 ### načítání obrázků - loadImages()
 
@@ -92,13 +62,17 @@ Setry nastaví novou pozici s ohledem na velikost mapy a pokud nekoliduje s osta
 
 Getry jen vrátí pozici
 
-### getShootingPoint / LookingPoint
+### LookingPoint
 
 Vrátí vektor kterým se postavička naposledy pohla.
 
-### collide
+### getShootingPoint
 
-nějaká černá kolizní magie.
+Vrátí pozici odkud postavička vystřeluje, neboli na této pozici vzniká nová kulka.
+
+### collide(Sprite collider)
+
+Zkontroluje zda se 2 Sprity nepřekrývají (nekolidují).
 
 ## Zbraně - Pistol
 

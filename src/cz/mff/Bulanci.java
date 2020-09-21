@@ -16,12 +16,10 @@ public class Bulanci extends JFrame {
     }
 
     private void initUI() {
-
         add(new Board());
 
         setTitle("Bulanci");
         setSize(Commons.BOARD_WIDTH, Commons.BOARD_HEIGHT);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
